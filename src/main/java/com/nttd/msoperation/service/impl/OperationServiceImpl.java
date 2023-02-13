@@ -20,13 +20,19 @@ public class OperationServiceImpl implements OperationService {
 
 	@Inject
 	OperationRepository operationRepository;
-
+	
+	
+	/*
+	 * proceso para persistir la operacion en la base de datos
+	 * 
+	 * */
 	@Override
 	@Transactional
 	public ResponseDto processOperation(OperationDto operationDto) {
 		try {
 			
-			if("T".equals(operationDto.getFlagdDescription())) {
+			//if("T".equals(operationDto.getFlagdDescription())) {
+			if(operationDto.getIdAOperationOrigin()!=null) {
 				// registrando  retiro cuenta origen
 				operationDto.setFlagOperation("R");
 				Operation operacionOrigen =	saveOperation(operationDto);
@@ -66,8 +72,14 @@ public class OperationServiceImpl implements OperationService {
 	private void updateAccountCustomer(Integer idAccountCustomer, Double ammount) {
 
 	}
-
+	
+	/***
+	 * 
+	 * obtener las operaciones registras , depositos, retiros transferencias, creditos , etc
+	 * */
+	
 	public List<Operation> retrieveOperations(OperationDto filter) {
+		// parametros que se pueden ir agregando
 		Map<String, Object> parametros = new HashMap<>();
 		if (filter.getFlagOperation() != null && filter.getFlagOperation().length()!=0)
 			parametros.put("flagOperation", filter.getFlagOperation());

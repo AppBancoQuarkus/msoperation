@@ -27,7 +27,10 @@ public class OperationResource {
 
 	@Inject
 	Logger logger;
-
+	
+	/**
+	 * Proceso de una operacion bancaria, pagos, depositos, transferencia
+	 * */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -38,7 +41,9 @@ public class OperationResource {
 		return Response.ok(responsedto).status(responsedto.getCode()).build();
 	}
 	
-	
+	/**
+	 * consulta de operaciones bancarias por filtros
+	 * */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response retrieveOperations(@PathParam(value = "flagOperation") String  flagOperation){
