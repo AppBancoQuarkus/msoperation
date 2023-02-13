@@ -17,6 +17,8 @@ public class AccountEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long IdAccountCustomer;
     @Column
+    private String flag_creation;
+    @Column
     private double current_amount;
     @Column
     private double starting_amount;
@@ -32,6 +34,10 @@ public class AccountEntity {
     private int quota;
     @Column
     private String paymentdate;
+    
+    @Column
+    private String state;
+
     @Column
     private long IdCustomer;
     @Column

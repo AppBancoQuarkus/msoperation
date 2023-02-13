@@ -1,6 +1,9 @@
 package com.nttd.msoperation.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nttd.msoperation.entity.AccountEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +15,11 @@ public class ResponseDto {
     
     private int code;
     private String message;
+    private List<AccountEntity> listaccount;
+    private AccountEntity account;
     private String errorMessage;
     private String description;
+    
 
 
     
@@ -25,6 +31,23 @@ public class ResponseDto {
     public ResponseDto(int code,String message) {
         this.code = code;
         this.message = message;
+    }
+
+    
+
+
+    public ResponseDto(int code, String message, AccountEntity account) {
+        this.code = code;
+        this.message = message;
+        this.account = account;
+    }
+
+
+
+    public ResponseDto(int code, String message, List<AccountEntity> listaccount) {
+        this.code = code;
+        this.message = message;
+        this.listaccount = listaccount;
     }
 
 

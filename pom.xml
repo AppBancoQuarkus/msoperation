@@ -71,6 +71,21 @@
       <version>1.18.24</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Comunicacion http -->
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-rest-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-rest-client-jackson</artifactId>
+    </dependency>
+    <!-- Tolerancia -->
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+    </dependency>
+
   </dependencies>
   <build>
     <plugins>
