@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import com.nttd.msoperation.api.request.BankCardRequest;
+import com.nttd.msoperation.api.request.CustomerRequest;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class AccountDto {
     private String courtdate;    
     private int quota;
     private String paymentdate;
-    private long IdCustomer;
+    private CustomerRequest customerRequest;
     private BankCardRequest bankCardRequest;
     private String state;
 

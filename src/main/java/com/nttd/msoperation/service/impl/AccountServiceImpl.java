@@ -5,7 +5,9 @@ import java.util.List;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.nttd.msoperation.api.BankCardApi;
+import com.nttd.msoperation.api.CustomerApi;
 import com.nttd.msoperation.api.response.BankCardResponse;
+import com.nttd.msoperation.api.response.CustomerResponse;
 import com.nttd.msoperation.dto.AccountDto;
 import com.nttd.msoperation.dto.ResponseDto;
 import com.nttd.msoperation.entity.AccountEntity;
@@ -26,6 +28,9 @@ public class AccountServiceImpl implements AccountService {
 
     @RestClient
     BankCardApi bankCardApi;
+
+    @RestClient
+    CustomerApi customerApi;
 
     @Override
     public ResponseDto getAllAccount() {
@@ -58,11 +63,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public ResponseDto addAccount(AccountDto accountDto){
-        try{
-            AccountEntity acEntity = new AccountEntity();
+        try{            
+            AccountEntity acEntity = new AccountEntity();            
+            CustomerResponse customerResponse = customerApi.addCustomer(accountDto.getCustomerRequest());
+            if(customerResponse.getCode() == Response.Status.CREATED.getStatusCode())
+                acEntity.setIdCustomer(customerResponse.getCustomer().getIdCustomer());
+            else return  new ResponseDto(400,"Bad Request.","Error en registrar el cliente.");
+
             acEntity.setFlag_creation(accountDto.getFlag_creation());
-            acEntity.setDescription(accountDto.getDescription());
-            acEntity.setIdCustomer(accountDto.getIdCustomer());
+            acEntity.setDescription(accountDto.getDescription());            
             acEntity.setState("A");
 
             // tipo de registro en la cuenta TC:TARJETA DE CREDITO
