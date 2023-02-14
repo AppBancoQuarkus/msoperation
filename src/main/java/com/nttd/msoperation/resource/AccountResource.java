@@ -9,6 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 //import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.jboss.logging.Logger;
 
@@ -29,6 +30,7 @@ public class AccountResource {
 
     @Inject
     Logger logger;
+/* Obterner todas las cuentas del cliente */
 
     @GET
     @Retry(maxRetries = 3)
@@ -39,15 +41,18 @@ public class AccountResource {
 
     }
 
+    /* Obterner los datos de una cuenta del cliente */
     @GET
     @Path("{id}")
-    //@Timeout(300)
+    @Timeout(900)
     public Response getByIdAccount(@PathParam("id") long id){
         logger.info("Iniciando el metodo de obtener una cuenta - Resource.");
         ResponseDto responsedto = accountService.getByIdAccount(id);
         return Response.ok(responsedto).status(responsedto.getCode()).build();
 
     }
+
+    /* Registrar una cuenta del cliente */
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -58,7 +63,7 @@ public class AccountResource {
         return Response.ok(responsedto).status(responsedto.getCode()).build();
     }
 
-
+/* Actualizar el monto credito o el tiempo de pago y corto de la cuenta del cliente */
     @PUT
     @Path("{id}")
     public Response updateAccount(@PathParam("id") long id,AccountDto accountDto){
@@ -68,6 +73,7 @@ public class AccountResource {
 
     }
 
+    /* Cambiar de estado la cuenta del cliente A:Activo o I:Inactivo  */
     @DELETE
     @Path("{id}")
     public Response deleteAccount(@PathParam("id") long id){

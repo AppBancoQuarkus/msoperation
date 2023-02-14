@@ -11,6 +11,6 @@ public class BankCardResponse {
     private String message;
     private String errorMessage;
     private String description;
-    private BankCardObject bankCardObject;
+    private BankCardObject bankCardEntity;
 
 }

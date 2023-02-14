@@ -49,12 +49,22 @@ public class OperationResource {
 	 * */
 	
 	@GET
+	@Path("{flagOperation}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response retrieveOperations(@PathParam(value = "flagOperation") String  flagOperation){
 		logger.info("Iniciando OperationResource.retrieveOperations");
 		OperationDto operationDto = new OperationDto();
 		operationDto.setFlagOperation(flagOperation);
 		List<Operation> lista = operationService.retrieveOperations(operationDto);
+		return Response.ok(lista).status(200).build();
+	}
+
+	/* mostrar todas las operaciones */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response retrieveOperations(){
+		logger.info("Iniciando OperationResource.retrieveOperations");
+		List<Operation> lista = operationService.retrieveOperations(new OperationDto());
 		return Response.ok(lista).status(200).build();
 	}
 	

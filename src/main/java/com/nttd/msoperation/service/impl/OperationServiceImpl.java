@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import com.nttd.msoperation.dto.OperationDto;
 import com.nttd.msoperation.dto.ResponseDto;
 import com.nttd.msoperation.entity.AccountEntity;
@@ -26,7 +28,12 @@ public class OperationServiceImpl implements OperationService {
 	@Inject
 	AccountRepository accountRepository;
 	
-	
+	@ConfigProperty(name = "exception.general")
+    String exceptionGeneral;
+    
+    @ConfigProperty(name = "mensaje.general")
+    String mensajeGeneral;
+
 	/*
 	 * proceso para persistir la operacion en la base de datos
 	 * 
@@ -36,8 +43,14 @@ public class OperationServiceImpl implements OperationService {
 	public ResponseDto processOperation(OperationDto operationDto) {
 		try {
 			
-			if(operationDto.getIdAOperationOrigin()!=null) {
+			if( operationDto.getDescription().equals("R") ||
+				operationDto.getDescription().equals("D")) {
+				operationDto.setFlagOperation(operationDto.getDescription());
+				operationDto.setIdAOperationOrigin(null);
+				saveOperation(operationDto);
+			}else{
 				// registrando  retiro cuenta origen
+				operationDto.setIdAOperationOrigin(null);
 				operationDto.setFlagOperation("R");
 				Operation operacionOrigen =	saveOperation(operationDto);
 				// registrando  retiro cuenta destino
@@ -45,13 +58,11 @@ public class OperationServiceImpl implements OperationService {
 				operationDto.setIdAccountCustomer(operationDto.getIdAccountCustomerDestiny());
 				operationDto.setIdAOperationOrigin(operacionOrigen.getIdOperation());
 				saveOperation(operationDto);
-			} else {
-				saveOperation(operationDto);
 			}
-			
-			return new ResponseDto(201, "Exitoso.");
+
+			return new ResponseDto(201, mensajeGeneral);
 		} catch (Exception ex) {
-			return new ResponseDto(400, "Bad Request.", ex.getMessage());
+			return new ResponseDto(400, exceptionGeneral, ex.getMessage());
 		}
 	}
 

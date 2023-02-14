@@ -2,6 +2,7 @@ package com.nttd.msoperation.service.impl;
 
 import java.util.List;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.nttd.msoperation.api.BankCardApi;
@@ -32,16 +33,31 @@ public class AccountServiceImpl implements AccountService {
     @RestClient
     CustomerApi customerApi;
 
+    @ConfigProperty(name = "exception.general")
+    String exceptionGeneral;
+    
+    @ConfigProperty(name = "mensaje.general")
+    String mensajeGeneral;
+
+    @ConfigProperty(name = "mensaje.noexiste")
+    String mensajeNoExiste;
+
+    @ConfigProperty(name = "valor.activo")
+    String valorActivo;
+
+    @ConfigProperty(name = "valor.inactivo")
+    String valorInactivo;
+
     @Override
     public ResponseDto getAllAccount() {
         try{
             List<AccountEntity> listaccount = accountRepository.listAll(Sort.by("IdCustomer"));
             if(listaccount.size() == 0)
-                return  new ResponseDto(204,"Account not found.","");
-            else return  new ResponseDto(200,"Exitoso.",listaccount);
+                return  new ResponseDto(204,mensajeNoExiste,"");
+            else return  new ResponseDto(200,mensajeGeneral,listaccount);
             
         }catch(Exception ex){
-            return  new ResponseDto(400,"Bad Request.",ex.getMessage());
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
         } 
     }
 
@@ -51,11 +67,11 @@ public class AccountServiceImpl implements AccountService {
         try{
             AccountEntity accountEntity = accountRepository.findById(id);
             if(accountEntity == null)
-                return  new ResponseDto(204,"Account not found.","");
-            else return  new ResponseDto(200,"Exitoso.",accountEntity);
+                return  new ResponseDto(204,mensajeNoExiste,"");
+            else return  new ResponseDto(200,mensajeGeneral,accountEntity);
             
         }catch(Exception ex){
-            return  new ResponseDto(400,"Bad Request.",ex.getMessage());
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
         } 
 
     }
@@ -68,19 +84,19 @@ public class AccountServiceImpl implements AccountService {
             CustomerResponse customerResponse = customerApi.addCustomer(accountDto.getCustomerRequest());
             if(customerResponse.getCode() == Response.Status.CREATED.getStatusCode())
                 acEntity.setIdCustomer(customerResponse.getCustomer().getIdCustomer());
-            else return  new ResponseDto(400,"Bad Request.","Error en registrar el cliente.");
+            else return  new ResponseDto(customerResponse.getCode(),customerResponse.getErrorMessage(),customerResponse.getDescription());
 
             acEntity.setFlag_creation(accountDto.getFlag_creation());
             acEntity.setDescription(accountDto.getDescription());            
-            acEntity.setState("A");
+            acEntity.setState(valorActivo);
 
             // tipo de registro en la cuenta TC:TARJETA DE CREDITO
             // C: CREDITO - TD: TARJETA DE DEBITO
             if(acEntity.getFlag_creation().equals("TC")){
                 BankCardResponse bankCardResponse = bankCardApi.addBankCard(accountDto.getBankCardRequest());
                 if(bankCardResponse.getCode() == Response.Status.CREATED.getStatusCode())
-                    acEntity.setIdBANKCARD(bankCardResponse.getBankCardObject().getIdBANKCARD());
-                else return  new ResponseDto(400,"Bad Request.","Error en registrar la tarjeta.");
+                    acEntity.setIdBANKCARD(bankCardResponse.getBankCardEntity().getIdBANKCARD());
+                else return  new ResponseDto(bankCardResponse.getCode(),bankCardResponse.getErrorMessage(),bankCardResponse.getDescription());
                 acEntity.setCurrent_amount(accountDto.getCurrent_amount());
                 acEntity.setStarting_amount(accountDto.getStarting_amount());
                 acEntity.setPaymentdate(accountDto.getPaymentdate());
@@ -97,14 +113,14 @@ public class AccountServiceImpl implements AccountService {
                 acEntity.setFlag_account(accountDto.getFlag_account());
                 BankCardResponse bankCardResponse = bankCardApi.addBankCard(accountDto.getBankCardRequest());
                 if(bankCardResponse.getCode() == Response.Status.CREATED.getStatusCode())
-                    acEntity.setIdBANKCARD(bankCardResponse.getBankCardObject().getIdBANKCARD());
-                else return  new ResponseDto(400,"Bad Request.","Error en registrar la tarjeta.");
+                    acEntity.setIdBANKCARD(bankCardResponse.getBankCardEntity().getIdBANKCARD());
+                else return  new ResponseDto(400,exceptionGeneral,"Error en registrar la tarjeta.");
             }
 
             accountRepository.persist(acEntity);
-            return  new ResponseDto(201,"Exitoso.",acEntity);
+            return  new ResponseDto(201,mensajeGeneral,acEntity);
         }catch(Exception ex){
-            return  new ResponseDto(400,"Bad Request.",ex.getMessage());
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
         }
             
     }
@@ -119,7 +135,7 @@ public class AccountServiceImpl implements AccountService {
         try{
             AccountEntity accountEntity = accountRepository.findById(id);
             if(accountEntity == null)
-                return  new ResponseDto(204,"Account not found.","");
+                return  new ResponseDto(204,mensajeNoExiste,"");
             else{
                 if(!accountDto.getFlag_account().equals(""))
                     accountEntity.setFlag_account(accountDto.getFlag_account());      
@@ -131,10 +147,10 @@ public class AccountServiceImpl implements AccountService {
                   
                 accountEntity.setCurrent_amount(accountEntity.getCurrent_amount()+accountDto.getCurrent_amount());
                 accountRepository.persist(accountEntity);
-                return  new ResponseDto(200,"Exitoso.",accountEntity);
+                return  new ResponseDto(200,mensajeGeneral,accountEntity);
             } 
         }catch(Exception ex){
-            return  new ResponseDto(400,"Bad Request.",ex.getMessage());
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
         } 
     }
 
@@ -144,14 +160,14 @@ public class AccountServiceImpl implements AccountService {
         try{
             AccountEntity accountEntity = accountRepository.findById(id);
             if(accountEntity == null)
-                return  new ResponseDto(204,"Account not found.","");
+                return  new ResponseDto(204,mensajeNoExiste,"");
             else{
-                accountEntity.setState("I");
+                accountEntity.setState(valorInactivo);
                 accountRepository.persist(accountEntity);
-                return  new ResponseDto(200,"Exitoso.",accountEntity);
+                return  new ResponseDto(200,mensajeGeneral,accountEntity);
             } 
         }catch(Exception ex){
-            return  new ResponseDto(400,"Bad Request.",ex.getMessage());
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
         } 
     }
 
