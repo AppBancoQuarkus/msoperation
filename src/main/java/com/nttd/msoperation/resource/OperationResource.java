@@ -31,6 +31,7 @@ public class OperationResource {
 	/**
 	 * Proceso de una operacion bancaria, pagos, depositos, transferencia
 	 * */
+	 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -39,20 +40,14 @@ public class OperationResource {
 		logger.info(operationDto.toString());
 		ResponseDto responsedto = operationService.processOperation(operationDto);
 		return Response.ok(responsedto).status(responsedto.getCode()).build();
-	}
+	} 
 	
 	/**
 	 * consulta de operaciones bancarias por filtros
 	 * flagOperation : D ó R
-	 * flag_description: R,D
-T
-T
-PC
-PC
-PTC
-PTC
-
+	 * flag_description: R,D T PC PTC
 	 * */
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response retrieveOperations(@PathParam(value = "flagOperation") String  flagOperation){
@@ -64,5 +59,5 @@ PTC
 	}
 	
 	
-
+	
 }
