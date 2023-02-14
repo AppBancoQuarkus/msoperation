@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import com.nttd.msoperation.dto.OperationDto;
 import com.nttd.msoperation.dto.ResponseDto;
+import com.nttd.msoperation.entity.AccountEntity;
 import com.nttd.msoperation.entity.Operation;
+import com.nttd.msoperation.repository.AccountRepository;
 import com.nttd.msoperation.repository.OperationRepository;
 import com.nttd.msoperation.service.OperationService;
 
@@ -21,6 +23,9 @@ public class OperationServiceImpl implements OperationService {
 	@Inject
 	OperationRepository operationRepository;
 	
+	@Inject
+	AccountRepository accountRepository;
+	
 	
 	/*
 	 * proceso para persistir la operacion en la base de datos
@@ -31,7 +36,6 @@ public class OperationServiceImpl implements OperationService {
 	public ResponseDto processOperation(OperationDto operationDto) {
 		try {
 			
-			//if("T".equals(operationDto.getFlagdDescription())) {
 			if(operationDto.getIdAOperationOrigin()!=null) {
 				// registrando  retiro cuenta origen
 				operationDto.setFlagOperation("R");
@@ -63,15 +67,19 @@ public class OperationServiceImpl implements OperationService {
 		operationEntity.setDescription(operationDto.getDescription());
 		operationEntity.setIdAccountCustomer(operationDto.getIdAccountCustomer());
 		operationRepository.persist(operationEntity);
+		
+		AccountEntity accountEntity =  accountRepository.findById(Long.valueOf(operationEntity.getIdAccountCustomer()));
+		if("R".equals(operationDto.getFlagOperation())) {
+			accountEntity.setCurrent_amount(accountEntity.getCurrent_amount()-operationDto.getAmmount());
+		} else {
+			accountEntity.setCurrent_amount(accountEntity.getCurrent_amount()+operationDto.getAmmount());
+		}
+		
+		accountRepository.persist(accountEntity);
+		
 		return operationEntity;
 	}
 
-	/**
-	 * Actualizar el monto en la cuenta principal
-	 */
-	private void updateAccountCustomer(Integer idAccountCustomer, Double ammount) {
-
-	}
 	
 	/***
 	 * 

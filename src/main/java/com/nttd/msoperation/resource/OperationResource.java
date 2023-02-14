@@ -43,6 +43,15 @@ public class OperationResource {
 	
 	/**
 	 * consulta de operaciones bancarias por filtros
+	 * flagOperation : D ó R
+	 * flag_description: R,D
+T
+T
+PC
+PC
+PTC
+PTC
+
 	 * */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
