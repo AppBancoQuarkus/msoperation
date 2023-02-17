@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 //import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.jboss.logging.Logger;
 
@@ -34,6 +35,7 @@ public class AccountResource {
 
     @GET
     @Retry(maxRetries = 3)
+    @Operation(summary = "Obtener las cuentas del cliente.",description = "Obtienes las cuentas del cliente.")
     public Response getAllAccount(){
         logger.info("Iniciando el metodo de obtener todas las cuentas - Resource.");
         ResponseDto responsedto = accountService.getAllAccount();
@@ -45,6 +47,7 @@ public class AccountResource {
     @GET
     @Path("{id}")
     @Timeout(900)
+    @Operation(summary = "Obtener una cuenta del cliente.",description = "Obtienes las cuentas del cliente por Id.")
     public Response getByIdAccount(@PathParam("id") long id){
         logger.info("Iniciando el metodo de obtener una cuenta - Resource.");
         ResponseDto responsedto = accountService.getByIdAccount(id);
@@ -57,6 +60,7 @@ public class AccountResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Registrar una cuenta del cliente",description = "Permite Registrar una cuenta del cliente")
     public Response addAccount(AccountDto accountDto) {
         logger.info("Iniciando el metodo de registrar cuenta - Resource.");
         ResponseDto responsedto = accountService.addAccount(accountDto);
@@ -66,6 +70,7 @@ public class AccountResource {
 /* Actualizar el monto credito o el tiempo de pago y corto de la cuenta del cliente */
     @PUT
     @Path("{id}")
+    @Operation(summary = "Actualizar la cuenta del cliente",description = "Permite Actualizar la cuenta del cliente")
     public Response updateAccount(@PathParam("id") long id,AccountDto accountDto){
         logger.info("Iniciando el metodo de actualizar una cuenta - Resource.");
         ResponseDto responsedto = accountService.updateAccount(id,accountDto);
@@ -76,6 +81,7 @@ public class AccountResource {
     /* Cambiar de estado la cuenta del cliente A:Activo o I:Inactivo  */
     @DELETE
     @Path("{id}")
+    @Operation(summary = "Eliminar una cuenta del cliente",description = "Permite eliminar una cuenta del cliente")
     public Response deleteAccount(@PathParam("id") long id){
         logger.info("Iniciando el metodo de eliminar una cuenta - Resource.");
         ResponseDto responsedto = accountService.deleteAccount(id);

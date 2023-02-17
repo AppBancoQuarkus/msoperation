@@ -35,6 +35,7 @@ public class OperationResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@org.eclipse.microprofile.openapi.annotations.Operation(summary = "Registrar las operaciones Bancarias",description = "Permite Registrar las operaciones Bancarias")
 	public Response processOperation(OperationDto operationDto) {
 		logger.info("Iniciando OperationResource.processOperation");
 		logger.info(operationDto.toString());
@@ -51,6 +52,7 @@ public class OperationResource {
 	@GET
 	@Path("{flagOperation}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@org.eclipse.microprofile.openapi.annotations.Operation(summary = "Consultar las operaciones bancarias por filtros",description = "Permite consulta de operaciones bancarias por filtros")
 	public Response retrieveOperations(@PathParam(value = "flagOperation") String  flagOperation){
 		logger.info("Iniciando OperationResource.retrieveOperations");
 		OperationDto operationDto = new OperationDto();
@@ -62,6 +64,7 @@ public class OperationResource {
 	/* mostrar todas las operaciones */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@org.eclipse.microprofile.openapi.annotations.Operation(summary = "Consultar todas las operaciones bancarias",description = "Permite Consultar todas las operaciones bancarias")
 	public Response retrieveOperations(){
 		logger.info("Iniciando OperationResource.retrieveOperations");
 		List<Operation> lista = operationService.retrieveOperations(new OperationDto());

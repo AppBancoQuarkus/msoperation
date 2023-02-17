@@ -82,7 +82,9 @@ public class AccountServiceImpl implements AccountService {
         try{            
             AccountEntity acEntity = new AccountEntity();            
             CustomerResponse customerResponse = customerApi.addCustomer(accountDto.getCustomerRequest());
-            if(customerResponse.getCode() == Response.Status.CREATED.getStatusCode())
+            if(customerResponse.getCode() == Response.Status.CREATED.getStatusCode() ||
+               (customerResponse.getCode() == Response.Status.OK.getStatusCode() 
+                && customerResponse.getCustomer() != null)  )
                 acEntity.setIdCustomer(customerResponse.getCustomer().getIdCustomer());
             else return  new ResponseDto(customerResponse.getCode(),customerResponse.getErrorMessage(),customerResponse.getDescription());
 
