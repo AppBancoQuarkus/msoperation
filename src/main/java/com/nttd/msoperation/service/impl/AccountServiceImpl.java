@@ -1,6 +1,8 @@
 package com.nttd.msoperation.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -48,10 +50,40 @@ public class AccountServiceImpl implements AccountService {
     @ConfigProperty(name = "valor.inactivo")
     String valorInactivo;
 
+    @ConfigProperty(name = "valor.tarjeta_debito")
+    String valorTarjetaDebito;
+    
+
     @Override
     public ResponseDto getAllAccount() {
         try{
             List<AccountEntity> listaccount = accountRepository.listAll(Sort.by("IdCustomer"));
+            if(listaccount.size() == 0)
+                return  new ResponseDto(204,mensajeNoExiste,"");
+            else return  new ResponseDto(200,mensajeGeneral,listaccount);
+            
+        }catch(Exception ex){
+            return  new ResponseDto(400,exceptionGeneral,ex.getMessage());
+        } 
+    }
+
+
+    @Override
+    public ResponseDto getProductsDifCardDebit(long idcustomer,boolean flag_dif_td) {
+        try{
+            Map<String, Object> params = new HashMap<>();
+			params.put("IdCustomer", idcustomer);
+            List<AccountEntity> listaccount;
+            if(flag_dif_td){
+			    params.put("flag_creation",valorTarjetaDebito);
+                listaccount = accountRepository.find
+                ("IdCustomer = :IdCustomer and flag_creation <> :flag_creation",
+                params).list();
+            }else{ listaccount = accountRepository.find
+                ("IdCustomer = :IdCustomer",params).list();
+
+            }
+            
             if(listaccount.size() == 0)
                 return  new ResponseDto(204,mensajeNoExiste,"");
             else return  new ResponseDto(200,mensajeGeneral,listaccount);

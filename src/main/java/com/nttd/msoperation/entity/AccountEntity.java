@@ -19,7 +19,7 @@ public class AccountEntity {
         name = "accountSequence",
         sequenceName = "account_id_seq",
         allocationSize = 1,
-        initialValue = 1)
+        initialValue = 9)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accountSequence")
     private long IdAccountCustomer;
     @Column
@@ -43,6 +43,9 @@ public class AccountEntity {
     
     @Column
     private String state;
+
+    @Column
+    private String accountnumber;
 
     @Column
     private long IdCustomer;

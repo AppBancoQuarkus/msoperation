@@ -43,6 +43,17 @@ public class AccountResource {
 
     }
 
+    @GET
+    @Path("/products/{idcustomer}/{flag_dif_td}")
+    @Operation(summary = "Obtener las cuentas del cliente.",description = "Obtienes las cuentas del cliente.")
+    public Response getProductsDifCardDebit(@PathParam("idcustomer") long idcustomer,
+                                @PathParam("flag_dif_td") boolean flag_dif_td  ){
+        logger.info("Iniciando el metodo de obtener todas las cuentas - Resource.");
+        ResponseDto responsedto = accountService.getProductsDifCardDebit(idcustomer,flag_dif_td);
+        return Response.ok(responsedto).status(responsedto.getCode()).build();
+
+    }
+
     /* Obterner los datos de una cuenta del cliente */
     @GET
     @Path("{id}")

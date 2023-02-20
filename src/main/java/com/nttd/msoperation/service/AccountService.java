@@ -8,6 +8,8 @@ public interface AccountService {
     
     public ResponseDto getAllAccount();
 
+    public ResponseDto getProductsDifCardDebit(long idcustomer,boolean flag_dif_td);
+
     public ResponseDto getByIdAccount(long id);
 
     public ResponseDto addAccount(AccountDto accountDto);

@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "Operation")
+@Entity(name = "BQTOPERATION")
 public class Operation {
 	
 	
