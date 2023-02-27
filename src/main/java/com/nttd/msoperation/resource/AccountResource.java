@@ -16,6 +16,7 @@ import org.jboss.logging.Logger;
 
 import com.nttd.msoperation.dto.AccountDto;
 import com.nttd.msoperation.dto.ResponseDto;
+import com.nttd.msoperation.dto.ValidationDebitDto;
 import com.nttd.msoperation.service.AccountService;
 
 import jakarta.ws.rs.core.MediaType;
@@ -31,12 +32,12 @@ public class AccountResource {
 
     @Inject
     Logger logger;
-/* Obterner todas las cuentas del cliente */
+    /* Obterner todas las cuentas del cliente */
 
     @GET
     @Retry(maxRetries = 3)
-    @Operation(summary = "Obtener las cuentas del cliente.",description = "Obtienes las cuentas del cliente.")
-    public Response getAllAccount(){
+    @Operation(summary = "Obtener las cuentas del cliente.", description = "Obtienes las cuentas del cliente.")
+    public Response getAllAccount() {
         logger.info("Iniciando el metodo de obtener todas las cuentas - Resource.");
         ResponseDto responsedto = accountService.getAllAccount();
         return Response.ok(responsedto).status(responsedto.getCode()).build();
@@ -58,8 +59,8 @@ public class AccountResource {
     @GET
     @Path("{id}")
     @Timeout(900)
-    @Operation(summary = "Obtener una cuenta del cliente.",description = "Obtienes las cuentas del cliente por Id.")
-    public Response getByIdAccount(@PathParam("id") long id){
+    @Operation(summary = "Obtener una cuenta del cliente.", description = "Obtienes las cuentas del cliente por Id.")
+    public Response getByIdAccount(@PathParam("id") long id) {
         logger.info("Iniciando el metodo de obtener una cuenta - Resource.");
         ResponseDto responsedto = accountService.getByIdAccount(id);
         return Response.ok(responsedto).status(responsedto.getCode()).build();
@@ -71,34 +72,55 @@ public class AccountResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Registrar una cuenta del cliente",description = "Permite Registrar una cuenta del cliente")
+    @Operation(summary = "Registrar una cuenta del cliente", description = "Permite Registrar una cuenta del cliente")
     public Response addAccount(AccountDto accountDto) {
         logger.info("Iniciando el metodo de registrar cuenta - Resource.");
         ResponseDto responsedto = accountService.addAccount(accountDto);
         return Response.ok(responsedto).status(responsedto.getCode()).build();
     }
 
-/* Actualizar el monto credito o el tiempo de pago y corto de la cuenta del cliente */
+    /*
+     * Actualizar el monto credito o el tiempo de pago y corto de la cuenta del
+     * cliente
+     */
     @PUT
     @Path("{id}")
-    @Operation(summary = "Actualizar la cuenta del cliente",description = "Permite Actualizar la cuenta del cliente")
-    public Response updateAccount(@PathParam("id") long id,AccountDto accountDto){
+    @Operation(summary = "Actualizar la cuenta del cliente", description = "Permite Actualizar la cuenta del cliente")
+    public Response updateAccount(@PathParam("id") long id, AccountDto accountDto) {
         logger.info("Iniciando el metodo de actualizar una cuenta - Resource.");
-        ResponseDto responsedto = accountService.updateAccount(id,accountDto);
+        ResponseDto responsedto = accountService.updateAccount(id, accountDto);
         return Response.ok(responsedto).status(responsedto.getCode()).build();
 
     }
 
-    /* Cambiar de estado la cuenta del cliente A:Activo o I:Inactivo  */
+    /* Cambiar de estado la cuenta del cliente A:Activo o I:Inactivo */
     @DELETE
     @Path("{id}")
-    @Operation(summary = "Eliminar una cuenta del cliente",description = "Permite eliminar una cuenta del cliente")
-    public Response deleteAccount(@PathParam("id") long id){
+    @Operation(summary = "Eliminar una cuenta del cliente", description = "Permite eliminar una cuenta del cliente")
+    public Response deleteAccount(@PathParam("id") long id) {
         logger.info("Iniciando el metodo de eliminar una cuenta - Resource.");
         ResponseDto responsedto = accountService.deleteAccount(id);
         return Response.ok(responsedto).status(responsedto.getCode()).build();
 
     }
 
+    /* Buscar cuenta por IdBANKCARD */
+    @GET
+    @Path("/IdBANKCARD/{IdBANKCARD}")
+    @Operation(summary = "Buscar una cuenta por el IdBANKCARD", description = "Permite buscar una cuenta por el numero de id de tarjeta asociada")
+    public Response findByIdBankCard(@PathParam("IdBANKCARD") long IdBANKCARD) {
+        logger.info("iniciando el metodo de buscar por IdBANKCARD -  Resource");
+        ResponseDto responseDto = accountService.findByIdBankCard(IdBANKCARD);
+        return Response.ok(responseDto).status(responseDto.getCode()).build();
+    }
 
+    /* Validar si es tarjeta de debito */
+    @GET
+    @Path("/validation/{IdBANKCARD}")
+    @Operation(summary = "Valida si la tarjeta es de debito", description = "Permite validar por el IdBANKCARD si es debito")
+    public Response validationDebit(@PathParam("IdBANKCARD") long IdBANKCARD) {
+        logger.info("iniciando metodo de validacion debito - resource");
+        ValidationDebitDto validation = accountService.isDebit(IdBANKCARD);
+        return Response.ok(validation).build();
+    }
 }
