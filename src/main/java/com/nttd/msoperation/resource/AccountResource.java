@@ -104,22 +104,12 @@ public class AccountResource {
 
     }
 
-    /* Buscar cuenta por IdBANKCARD */
-    @GET
-    @Path("/IdBANKCARD/{IdBANKCARD}")
-    @Operation(summary = "Buscar una cuenta por el IdBANKCARD", description = "Permite buscar una cuenta por el numero de id de tarjeta asociada")
-    public Response findByIdBankCard(@PathParam("IdBANKCARD") long IdBANKCARD) {
-        logger.info("iniciando el metodo de buscar por IdBANKCARD -  Resource");
-        ResponseDto responseDto = accountService.findByIdBankCard(IdBANKCARD);
-        return Response.ok(responseDto).status(responseDto.getCode()).build();
-    }
-
     /* Validar si es tarjeta de debito */
     @GET
     @Path("/validation/{IdBANKCARD}")
     @Operation(summary = "Valida si la tarjeta es de debito", description = "Permite validar por el IdBANKCARD si es debito")
     public Response validationDebit(@PathParam("IdBANKCARD") long IdBANKCARD) {
-        logger.info("iniciando metodo de validacion debito - resource");
+        logger.info("iniciando metodo validationDebit - resource");
         ValidationDebitDto validation = accountService.isDebit(IdBANKCARD);
         return Response.ok(validation).build();
     }

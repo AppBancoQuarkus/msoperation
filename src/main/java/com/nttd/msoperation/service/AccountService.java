@@ -18,8 +18,6 @@ public interface AccountService {
 
     public ResponseDto deleteAccount(long id);
 
-    public ResponseDto findByIdBankCard(long IdBANKCARD);
-
     public ValidationDebitDto isDebit(long IdBANKCARD);
 
 }

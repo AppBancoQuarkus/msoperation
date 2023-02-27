@@ -210,24 +210,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseDto findByIdBankCard(long IdBANKCARD) {
-        try {
-            AccountEntity accountEntity = accountRepository.find("IdBANKCARD", IdBANKCARD).firstResult();
-            if (accountEntity == null) {
-                return new ResponseDto(204, mensajeNoExiste, "");
-            } else {
-                return new ResponseDto(200, mensajeGeneral, accountEntity);
-            }
-        } catch (Exception e) {
-            return new ResponseDto(400, exceptionGeneral, e.getMessage());
-        }
-    }
-
-    @Override
     public ValidationDebitDto isDebit(long IdBANKCARD) {
         AccountEntity accountEntity = accountRepository.find("IdBANKCARD", IdBANKCARD).firstResult();
         ValidationDebitDto validation = new ValidationDebitDto();
-        if (accountEntity != null && accountEntity.getFlag_creation().equals("TC")
+        if (accountEntity != null && accountEntity.getFlag_creation().equals("TD")
                 && accountEntity.getState().equals("A")) {
             validation.setRespuesta(true);
             validation.setIdAccountCustomer(accountEntity.getIdAccountCustomer());
